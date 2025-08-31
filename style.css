@@ -1,0 +1,299 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+}
+
+.container {
+    text-align: center;
+    color: white;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dice-container {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    margin-bottom: 3rem;
+}
+
+.dice {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    transform-style: preserve-3d;
+    transform: rotateX(-15deg) rotateY(-15deg);
+    transition: transform 0.8s ease-out;
+}
+
+.dice.rolling {
+    animation: roll 0.8s ease-out;
+}
+
+@keyframes roll {
+    0% { transform: rotateX(-15deg) rotateY(-15deg); }
+    25% { transform: rotateX(370deg) rotateY(185deg); }
+    50% { transform: rotateX(550deg) rotateY(370deg); }
+    75% { transform: rotateX(730deg) rotateY(555deg); }
+    100% { transform: rotateX(720deg) rotateY(720deg); }
+}
+
+.face {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: #fff;
+    border: 3px solid #333;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.face.front {
+    transform: rotateY(0deg) translateZ(50px);
+}
+
+.face.back {
+    transform: rotateY(180deg) translateZ(50px);
+}
+
+.face.right {
+    transform: rotateY(90deg) translateZ(50px);
+}
+
+.face.left {
+    transform: rotateY(-90deg) translateZ(50px);
+}
+
+.face.top {
+    transform: rotateX(90deg) translateZ(50px);
+}
+
+.face.bottom {
+    transform: rotateX(-90deg) translateZ(50px);
+}
+
+.dot {
+    width: 18px;
+    height: 18px;
+    background: #333;
+    border-radius: 50%;
+    margin: 2px;
+}
+
+/* Specific dot arrangements for each face */
+.face.front {
+    justify-content: center;
+    align-items: center;
+}
+
+.face.back {
+    justify-content: space-between;
+    align-items: stretch;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.face.back .dot:nth-child(1),
+.face.back .dot:nth-child(2),
+.face.back .dot:nth-child(3) {
+    align-self: flex-start;
+}
+
+.face.back .dot:nth-child(4),
+.face.back .dot:nth-child(5),
+.face.back .dot:nth-child(6) {
+    align-self: flex-end;
+}
+
+.face.right {
+    justify-content: space-between;
+    align-items: stretch;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.face.right .dot:nth-child(1) {
+    align-self: flex-start;
+}
+
+.face.right .dot:nth-child(2) {
+    align-self: flex-end;
+}
+
+.face.left {
+    justify-content: space-between;
+    align-items: stretch;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.face.left .dot:nth-child(1),
+.face.left .dot:nth-child(2) {
+    align-self: flex-start;
+}
+
+.face.left .dot:nth-child(3) {
+    align-self: center;
+}
+
+.face.left .dot:nth-child(4),
+.face.left .dot:nth-child(5) {
+    align-self: flex-end;
+}
+
+.face.top {
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px 10px;
+}
+
+.face.top .dot:nth-child(2) {
+    align-self: center;
+}
+
+.face.bottom {
+    justify-content: space-between;
+    align-items: stretch;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.face.bottom .dot:nth-child(1),
+.face.bottom .dot:nth-child(2) {
+    align-self: flex-start;
+}
+
+.face.bottom .dot:nth-child(3),
+.face.bottom .dot:nth-child(4) {
+    align-self: flex-end;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.roll-btn {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff6b6b, #ffa500);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.roll-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+}
+
+.roll-btn:active {
+    transform: translateY(0);
+}
+
+.roll-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.result {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dice-result {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.total {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+    .dice-container {
+        gap: 2rem;
+    }
+
+    .dice {
+        width: 80px;
+        height: 80px;
+    }
+
+    .face {
+        width: 80px;
+        height: 80px;
+    }
+
+    .face.front,
+    .face.back,
+    .face.right,
+    .face.left {
+        transform: rotateY(0deg) translateZ(40px);
+    }
+
+    .face.back {
+        transform: rotateY(180deg) translateZ(40px);
+    }
+
+    .face.right {
+        transform: rotateY(90deg) translateZ(40px);
+    }
+
+    .face.left {
+        transform: rotateY(-90deg) translateZ(40px);
+    }
+
+    .face.top {
+        transform: rotateX(90deg) translateZ(40px);
+    }
+
+    .face.bottom {
+        transform: rotateX(-90deg) translateZ(40px);
+    }
+
+    .dice-result {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+}

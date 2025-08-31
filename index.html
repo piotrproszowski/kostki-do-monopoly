@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kostki do Monopoly</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Kostki do Monopoly</h1>
+
+        <div class="dice-container">
+            <div class="dice" id="dice1">
+                <div class="face front">
+                    <div class="dot"></div>
+                </div>
+                <div class="face back">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="face right">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="face left">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="face top">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="face bottom">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+
+            <div class="dice" id="dice2">
+                <div class="face front">
+                    <div class="dot"></div>
+                </div>
+                <div class="face back">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="face right">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="face left">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="face top">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="face bottom">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="rollButton" class="roll-btn">Rzuć kostkami!</button>
+            <div class="result" id="result">
+                <div class="dice-result">
+                    <span>Kostka 1: <span id="dice1Result">1</span></span>
+                    <span>Kostka 2: <span id="dice2Result">1</span></span>
+                </div>
+                <div class="total">Suma: <span id="totalResult">2</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
