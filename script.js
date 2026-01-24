@@ -1,63 +1,62 @@
-// Dice faces configuration - each array represents the dots on a face
+// Dice faces configuration - Mapping dots on a 3x3 grid (indices 0-8)
 const diceFaces = {
-    1: [4], // center dot (index 4 in a 3x3 grid)
-    2: [0, 8], // top-left and bottom-right
-    3: [0, 4, 8], // diagonal
-    4: [0, 2, 6, 8], // corners
-    5: [0, 2, 4, 6, 8], // corners + center
-    6: [0, 1, 2, 6, 7, 8] // two columns
+    1: [4],                // Center
+    2: [0, 8],             // Top-Left, Bottom-Right
+    3: [0, 4, 8],          // Diagonal
+    4: [0, 2, 6, 8],       // Corners
+    5: [0, 2, 4, 6, 8],    // Corners + Center
+    6: [0, 2, 3, 5, 6, 8]  // Columns (Left: 0,3,6 | Right: 2,5,8)
 };
 
-// Current dice values
-let currentDice1 = 1;
-let currentDice2 = 1;
-
 // Elements
-const dice1 = document.getElementById('dice1');
-const dice2 = document.getElementById('dice2');
+const diceContainer = document.querySelector('.dice-container');
+const diceCountSelect = document.getElementById('diceCount');
 const rollButton = document.getElementById('rollButton');
-const dice1Result = document.getElementById('dice1Result');
-const dice2Result = document.getElementById('dice2Result');
-const totalResult = document.getElementById('totalResult');
+const historyList = document.getElementById('historyList');
+const resultContainer = document.getElementById('result');
 
-// Initialize dice faces
-function initializeDice() {
-    setupDiceFace(dice1);
-    setupDiceFace(dice2);
-    updateDiceDisplay(dice1, 1);
-    updateDiceDisplay(dice2, 1);
+// Initialize
+function initializeApp() {
+    createDice(2); // Default
+    resultContainer.innerHTML = '<div class="total">Gotowy do rzutu</div>';
 }
 
-// Setup dice face structure
-function setupDiceFace(diceElement) {
-    const faces = ['front', 'back', 'right', 'left', 'top', 'bottom'];
-
-    faces.forEach(faceClass => {
-        const face = diceElement.querySelector(`.${faceClass}`);
-        face.innerHTML = '';
-
-        // Create 9 dot positions (3x3 grid)
-        for (let i = 0; i < 9; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'dot';
-            dot.style.visibility = 'hidden';
-            face.appendChild(dot);
-        }
-    });
+// Create dice HTML dynamically
+function createDice(count) {
+    diceContainer.innerHTML = '';
+    
+    for (let i = 0; i < count; i++) {
+        const dice = document.createElement('div');
+        dice.className = 'dice';
+        dice.id = `dice${i+1}`;
+        
+        ['front', 'back', 'right', 'left', 'top', 'bottom'].forEach(faceType => {
+            const face = document.createElement('div');
+            face.className = `face ${faceType}`;
+            
+            // Create 9 dots
+            for(let j=0; j<9; j++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                face.appendChild(dot);
+            }
+            dice.appendChild(face);
+        });
+        
+        diceContainer.appendChild(dice);
+        
+        // Initial animation/position
+        updateDiceDisplay(dice, 1);
+    }
 }
 
-// Update dice face to show specific number
+// Update single dice display
 function updateDiceDisplay(diceElement, number) {
     const faces = diceElement.querySelectorAll('.face');
 
-    // Map numbers to faces (this creates the illusion of a real die)
+    // Map numbers to faces
     const faceNumbers = {
-        front: 1,
-        back: 6,
-        right: 2,
-        left: 5,
-        top: 3,
-        bottom: 4
+        front: 1, back: 6, right: 2, left: 5, top: 3, bottom: 4
     };
 
     faces.forEach(face => {
@@ -65,21 +64,19 @@ function updateDiceDisplay(diceElement, number) {
         const faceNumber = faceNumbers[faceClass];
         const dots = face.querySelectorAll('.dot');
 
-        // Hide all dots first
-        dots.forEach(dot => {
-            dot.style.visibility = 'hidden';
-        });
+        // Reset all dots to hidden
+        dots.forEach(dot => dot.style.opacity = '0');
 
-        // Show dots based on the number for this face
+        // Show specific dots for this number
         if (diceFaces[faceNumber]) {
             diceFaces[faceNumber].forEach(dotIndex => {
                 if (dots[dotIndex]) {
-                    dots[dotIndex].style.visibility = 'visible';
+                    dots[dotIndex].style.opacity = '1';
                 }
             });
         }
     });
-
+    
     // Rotate dice to show the correct face
     const rotations = {
         1: 'rotateX(0deg) rotateY(0deg)',
@@ -93,104 +90,116 @@ function updateDiceDisplay(diceElement, number) {
     diceElement.style.transform = rotations[number];
 }
 
-// Generate random number between 1 and 6
+// Generate random number
 function rollDice() {
-    return Math.floor(Math.random() * 6) + 1;
+    const array = new Uint32Array(1);
+    self.crypto.getRandomValues(array);
+    return (array[0] % 6) + 1;
 }
 
-// Roll both dice
-function rollBothDice() {
-    const newDice1 = rollDice();
-    const newDice2 = rollDice();
-
-    // Disable button during animation
+// Roll logic for N dice
+function rollAllDice() {
+    const count = parseInt(diceCountSelect.value);
+    const results = [];
+    
     rollButton.disabled = true;
     rollButton.textContent = 'Rzucanie...';
-
-    // Add rolling animation
-    dice1.classList.add('rolling');
-    dice2.classList.add('rolling');
-
-    // Update values after animation
+    
+    // Add animation to all
+    const allDice = document.querySelectorAll('.dice');
+    allDice.forEach(d => d.classList.add('rolling'));
+    
+    // Generate results
+    for(let i=0; i<count; i++) {
+        results.push(rollDice());
+    }
+    
     setTimeout(() => {
-        currentDice1 = newDice1;
-        currentDice2 = newDice2;
-
-        updateDiceDisplay(dice1, currentDice1);
-        updateDiceDisplay(dice2, currentDice2);
-        updateResults();
-
-        // Remove rolling class and re-enable button
-        dice1.classList.remove('rolling');
-        dice2.classList.remove('rolling');
+        let total = 0;
+        allDice.forEach((dice, index) => {
+            const val = results[index];
+            total += val;
+            updateDiceDisplay(dice, val);
+            dice.classList.remove('rolling');
+        });
+        
+        // Update text result
+        let resultText = results.map((r, i) => `K${i+1}: ${r}`).join(' | ');
+        const resultHTML = `
+            <div class="dice-result" style="flex-wrap: wrap; justify-content: center;">${resultText}</div>
+            <div class="total">Suma: ${total}</div>
+        `;
+        resultContainer.innerHTML = resultHTML;
+        
+        addToHistory(results);
+        
         rollButton.disabled = false;
         rollButton.textContent = 'Rzuć kostkami!';
+        
+        // Pulse animation
+        resultContainer.style.transform = 'scale(1.05)';
+        setTimeout(() => resultContainer.style.transform = 'scale(1)', 200);
+        
     }, 800);
 }
 
-// Update result display
-function updateResults() {
-    dice1Result.textContent = currentDice1;
-    dice2Result.textContent = currentDice2;
-    totalResult.textContent = currentDice1 + currentDice2;
+// Update history for N dice
+function addToHistory(results) {
+    const total = results.reduce((a, b) => a + b, 0);
+    const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    
+    const item = document.createElement('li');
+    item.className = 'history-item';
+    
+    // Format: 1, 3, 5 = 9
+    const rollsStr = results.join(' + ');
+    
+    item.innerHTML = `
+        <span class="roll-time" style="font-size: 0.8rem; color: #ddd;">${time}</span>
+        <div style="text-align: right;">
+            <span style="display:block; font-size: 0.85rem;">🎲 ${rollsStr}</span>
+            <span class="roll-number">= ${total}</span>
+        </div>
+    `;
 
-    // Add a subtle animation to the results
-    const resultElement = document.getElementById('result');
-    resultElement.style.transform = 'scale(1.05)';
-    setTimeout(() => {
-        resultElement.style.transform = 'scale(1)';
-    }, 200);
-}
-
-// Add keyboard support
-function handleKeyPress(event) {
-    if (event.code === 'Space' || event.key === 'Enter') {
-        event.preventDefault();
-        if (!rollButton.disabled) {
-            rollBothDice();
-        }
+    if (historyList.firstChild) {
+        historyList.insertBefore(item, historyList.firstChild);
+    } else {
+        historyList.appendChild(item);
     }
+    
+    if (historyList.children.length > 10) historyList.removeChild(historyList.lastChild);
 }
 
-// Event listeners
-rollButton.addEventListener('click', rollBothDice);
-document.addEventListener('keydown', handleKeyPress);
+// Event Listeners
+rollButton.addEventListener('click', rollAllDice);
 
-// Initialize the dice when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    initializeDice();
-    updateResults();
-
-    // Add smooth transitions
-    dice1.style.transition = 'transform 0.8s ease-out';
-    dice2.style.transition = 'transform 0.8s ease-out';
-    document.getElementById('result').style.transition = 'transform 0.2s ease-out';
+diceCountSelect.addEventListener('change', (e) => {
+    createDice(parseInt(e.target.value));
+    resultContainer.innerHTML = '<div class="total">Gotowy do rzutu</div>';
 });
 
-// Add some fun sound effects (optional - can be uncommented if you add sound files)
-/*
-function playRollSound() {
-    const audio = new Audio('roll-sound.mp3');
-    audio.volume = 0.3;
-    audio.play().catch(e => console.log('Sound not available'));
-}
-*/
-
-// Add double click for quick roll
-dice1.addEventListener('dblclick', rollBothDice);
-dice2.addEventListener('dblclick', rollBothDice);
-
-// Add touch support for mobile
-dice1.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    if (!rollButton.disabled) {
-        rollBothDice();
+// Keyboard
+document.addEventListener('keydown', (e) => {
+    if ((e.code === 'Space' || e.key === 'Enter') && !rollButton.disabled) {
+        e.preventDefault();
+        rollAllDice();
     }
 });
 
-dice2.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    if (!rollButton.disabled) {
-        rollBothDice();
+// Init
+document.addEventListener('DOMContentLoaded', initializeApp);
+
+// Double click
+document.addEventListener('dblclick', (e) => {
+    if(e.target.closest('.dice') && !rollButton.disabled) {
+        rollAllDice();
+    }
+});
+// Touch
+document.addEventListener('touchstart', (e) => {
+    if(e.target.closest('.dice') && !rollButton.disabled) {
+        e.preventDefault();
+        rollAllDice();
     }
 });

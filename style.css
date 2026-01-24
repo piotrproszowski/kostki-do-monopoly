@@ -53,6 +53,7 @@ h1 {
     100% { transform: rotateX(720deg) rotateY(720deg); }
 }
 
+/* Face definitions */
 .face {
     position: absolute;
     width: 100px;
@@ -60,132 +61,93 @@ h1 {
     background: #fff;
     border: 3px solid #333;
     border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.face.front {
-    transform: rotateY(0deg) translateZ(50px);
-}
-
-.face.back {
-    transform: rotateY(180deg) translateZ(50px);
-}
-
-.face.right {
-    transform: rotateY(90deg) translateZ(50px);
-}
-
-.face.left {
-    transform: rotateY(-90deg) translateZ(50px);
-}
-
-.face.top {
-    transform: rotateX(90deg) translateZ(50px);
-}
-
-.face.bottom {
-    transform: rotateX(-90deg) translateZ(50px);
-}
-
-.dot {
-    width: 18px;
-    height: 18px;
-    background: #333;
-    border-radius: 50%;
-    margin: 2px;
-}
+.face.front { transform: rotateY(0deg) translateZ(50px); }
+.face.back { transform: rotateY(180deg) translateZ(50px); }
+.face.right { transform: rotateY(90deg) translateZ(50px); }
+.face.left { transform: rotateY(-90deg) translateZ(50px); }
+.face.top { transform: rotateX(90deg) translateZ(50px); }
+.face.bottom { transform: rotateX(-90deg) translateZ(50px); }
 
 /* Specific dot arrangements for each face */
-.face.front {
-    justify-content: center;
+/* Dice Face Grid System */
+/* Dice Face Grid System */
+.face {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    padding: 12px;
+    gap: 2px;
+    justify-items: center;
     align-items: center;
 }
 
-.face.back {
-    justify-content: space-between;
-    align-items: stretch;
+/* Ensure dots fill their grid cells but stay circular */
+.dot {
+    width: 16px;
+    height: 16px;
+    background: #333;
+    border-radius: 50%;
+    /* Start hidden, JS will toggle opacity/visibility */
+    opacity: 0;
+    transition: opacity 0.2s;
+    margin: 0; 
+}
+
+/* History Section Styles */
+.history-container {
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 15px;
+    color: white;
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.history-title {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.history-list {
+    list-style: none;
+    display: flex;
     flex-direction: column;
-    padding: 10px;
+    gap: 8px;
 }
 
-.face.back .dot:nth-child(1),
-.face.back .dot:nth-child(2),
-.face.back .dot:nth-child(3) {
-    align-self: flex-start;
-}
-
-.face.back .dot:nth-child(4),
-.face.back .dot:nth-child(5),
-.face.back .dot:nth-child(6) {
-    align-self: flex-end;
-}
-
-.face.right {
-    justify-content: space-between;
-    align-items: stretch;
-    flex-direction: column;
-    padding: 10px;
-}
-
-.face.right .dot:nth-child(1) {
-    align-self: flex-start;
-}
-
-.face.right .dot:nth-child(2) {
-    align-self: flex-end;
-}
-
-.face.left {
-    justify-content: space-between;
-    align-items: stretch;
-    flex-direction: column;
-    padding: 10px;
-}
-
-.face.left .dot:nth-child(1),
-.face.left .dot:nth-child(2) {
-    align-self: flex-start;
-}
-
-.face.left .dot:nth-child(3) {
-    align-self: center;
-}
-
-.face.left .dot:nth-child(4),
-.face.left .dot:nth-child(5) {
-    align-self: flex-end;
-}
-
-.face.top {
+.history-item {
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-direction: column;
-    padding: 20px 10px;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1rem;
+    animation: slideIn 0.3s ease-out;
 }
 
-.face.top .dot:nth-child(2) {
-    align-self: center;
+.history-item .roll-number {
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 1.1rem;
 }
 
-.face.bottom {
-    justify-content: space-between;
-    align-items: stretch;
-    flex-direction: column;
-    padding: 10px;
-}
-
-.face.bottom .dot:nth-child(1),
-.face.bottom .dot:nth-child(2) {
-    align-self: flex-start;
-}
-
-.face.bottom .dot:nth-child(3),
-.face.bottom .dot:nth-child(4) {
-    align-self: flex-end;
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .controls {
@@ -221,6 +183,27 @@ h1 {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
+}
+
+.settings {
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dice-selector {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    background: white;
+    color: #333;
+    font-weight: bold;
 }
 
 .result {
@@ -295,5 +278,11 @@ h1 {
 
     h1 {
         font-size: 2rem;
+    }
+
+    /* Slightly smaller dots for mobile to fit 80px face with grid gap */
+    .dot {
+        width: 14px;
+        height: 14px;
     }
 }

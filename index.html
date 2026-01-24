@@ -85,6 +85,16 @@
         </div>
 
         <div class="controls">
+            <div class="settings">
+                <label for="diceCount">Liczba kostek:</label>
+                <select id="diceCount" class="dice-selector">
+                    <option value="1">1</option>
+                    <option value="2" selected>2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
             <button id="rollButton" class="roll-btn">Rzuć kostkami!</button>
             <div class="result" id="result">
                 <div class="dice-result">
@@ -92,6 +102,13 @@
                     <span>Kostka 2: <span id="dice2Result">1</span></span>
                 </div>
                 <div class="total">Suma: <span id="totalResult">2</span></div>
+            </div>
+
+            <div class="history-container">
+                <div class="history-title">Historia rzutów</div>
+                <ul class="history-list" id="historyList">
+                    <!-- History items will appear here -->
+                </ul>
             </div>
         </div>
     </div>
