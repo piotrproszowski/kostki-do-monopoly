@@ -61,7 +61,7 @@ def main():
 
     # Create server
     try:
-        with socketserver.TCPServer(("", PORT), CustomHTTPRequestHandler) as httpd:
+        with socketserver.TCPServer(("127.0.0.1", PORT), CustomHTTPRequestHandler) as httpd:
             print("🎲 Kostki do Monopoly - Server")
             print("=" * 50)
             print(f"📁 Serving directory: {DIRECTORY}")
