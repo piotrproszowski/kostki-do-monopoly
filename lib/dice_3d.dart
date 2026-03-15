@@ -211,9 +211,9 @@ class _DicePainter extends CustomPainter {
       canvas.drawPath(path, dotPaint);
     }
 
-    final mid = 0.5;
-    final low = 0.25;
-    final high = 0.75;
+    const mid = 0.5;
+    const low = 0.25;
+    const high = 0.75;
 
     switch (face.id) {
       case 1:
